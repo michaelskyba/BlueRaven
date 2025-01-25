@@ -1,5 +1,7 @@
 # 🦅 BlueRaven
 
+<img src="icon.png" alt="BlueRaven Logo" width="128" height="128" style="display: block; margin: 20px auto;">
+
 A sleek, modern theme extension that brings back the classic Twitter vibes to X while adding powerful customization options.
 
 ## ✨ Features
