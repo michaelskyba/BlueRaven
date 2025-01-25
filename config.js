@@ -150,6 +150,9 @@ const TWITTER_MODS = {
         margin: 0 auto !important;
         float: none !important;
         max-width: 600px !important;
+        width: 600px !important;
+        flex: 0 1 600px !important;
+        -webkit-box-flex: 0 !important;
       `
     },
     badgeColor: {
