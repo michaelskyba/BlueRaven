@@ -166,6 +166,16 @@ const TWITTER_MODS = {
       styles: `
         background-color: rgb(29, 155, 240) !important;
       `
+    },
+    unreadBadge: {
+      enabled: false,
+      description: "Fix Unread Message Badge Color",
+      selectors: [
+        'div[class*="r-sdzlij"][class*="r-1f4tc2a"][class*="r-1phboty"]'
+      ],
+      styles: `
+        background-color: rgb(29, 155, 240) !important;
+      `
     }
   },
 
