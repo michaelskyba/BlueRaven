@@ -7,10 +7,14 @@ chrome.runtime.onInstalled.addListener(async () => {
     // Set new default settings
     const defaultSettings = {
       hideElements: {
+        sidebar: { enabled: false },
         trending: { enabled: false }
       },
       replaceElements: {
         xLogo: { enabled: false }
+      },
+      styleFixes: {
+        centerLayout: { enabled: false }
       },
       theme: { enabled: false }
     };

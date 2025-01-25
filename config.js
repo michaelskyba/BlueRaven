@@ -13,6 +13,14 @@ const TWITTER_MODS = {
 
   // UI Elements to Hide
   hideElements: {
+    sidebar: {
+      enabled: false,
+      description: "Hide Entire Sidebar",
+      selectors: [
+        'div[data-testid="sidebarColumn"]',
+        'div[class*="css-175oi2r r-aqfbo4 r-1pi2tsx r-1xcajam r-1d2f490 r-1p0dtai r-1d2f490 r-u8s1d r-zchlnj r-ipm5af"]'
+      ]
+    },
     trending: {
       enabled: false,
       description: "Hide Trending Sections",
@@ -131,6 +139,19 @@ const TWITTER_MODS = {
   
   // Style Fixes
   styleFixes: {
+    centerLayout: {
+      enabled: false,
+      description: "Center Main Content",
+      selectors: [
+        'div[data-testid="primaryColumn"]',
+        'div[data-testid="primaryColumn"] > div'
+      ],
+      styles: `
+        margin: 0 auto !important;
+        float: none !important;
+        max-width: 600px !important;
+      `
+    },
     badgeColor: {
       enabled: false,
       description: "Fix Badge Color to Twitter Blue",
