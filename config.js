@@ -38,7 +38,8 @@ const TWITTER_MODS = {
         'div[style*="position: absolute"][style*="bottom: 0"]:has(div[data-testid="GrokDrawer"])',
         'a[aria-label="Grok"][role="link"]',
         'button[data-testid="grokImgGen"]',
-        'div[role="presentation"]:has(button[data-testid="grokImgGen"])'
+        'div[role="presentation"]:has(button[data-testid="grokImgGen"])',
+        'button[aria-label="Grok actions"][role="button"]'
       ]
     },
     brokenSpacer: {
