@@ -198,5 +198,14 @@ const FeatureHandlers = {
       }
       StyleManager.applyStyle(`replaceElements-${key}`, css);
     }
+  },
+
+  styleFixes: (config, enabled, key) => {
+    if (enabled) {
+      const css = config.selectors
+        .map(selector => `${selector} { ${config.styles} }`)
+        .join('\n');
+      StyleManager.applyStyle(`styleFixes-${key}`, css);
+    }
   }
 }; 

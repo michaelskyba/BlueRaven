@@ -127,5 +127,20 @@ const TWITTER_MODS = {
         `
       }
     }
+  },
+  
+  // Style Fixes
+  styleFixes: {
+    badgeColor: {
+      enabled: false,
+      description: "Fix Badge Color to Twitter Blue",
+      selectors: [
+        'div[aria-label*="unread items"]',
+        'div[aria-label*="New items"]'
+      ],
+      styles: `
+        background-color: rgb(29, 155, 240) !important;
+      `
+    }
   }
 }; 
