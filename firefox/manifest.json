@@ -1,25 +1,30 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "BlueRaven",
   "version": "1.0",
   "description": "Modern theme for Twitter/X",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "blueraven@example.com"
+    }
+  },
   "icons": {
     "16": "icon.png",
     "32": "icon.png",
     "48": "icon.png",
     "128": "icon.png"
   },
-  "action": {
+  "browser_action": {
     "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icon.png",
-      "32": "icon.png",
-      "48": "icon.png",
-      "128": "icon.png"
-    }
+    "default_icon": "icon.png",
+    "theme_icons": [{
+      "light": "icon.png",
+      "dark": "icon.png",
+      "size": 32
+    }]
   },
-  "permissions": ["storage"],
-  "host_permissions": [
+  "permissions": [
+    "storage",
     "*://twitter.com/*",
     "*://x.com/*"
   ],
@@ -31,11 +36,11 @@
     "css": ["styles.css"],
     "js": ["config.js", "content.js"]
   }],
-  "web_accessible_resources": [{
-    "resources": ["styles.css"],
-    "matches": ["*://twitter.com/*", "*://x.com/*"]
-  }],
+  "web_accessible_resources": [
+    "styles.css"
+  ],
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["background.js"],
+    "persistent": false
   }
 } 
