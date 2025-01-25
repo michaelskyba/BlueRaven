@@ -4,12 +4,7 @@
 
 A sleek theme extension that brings back classic Twitter vibes to X with powerful customization options.
 
-## ✨ Features
-
-- **Center Layout**: Transform your feed with a centered 1000px layout
-- **Hide Elements**: Remove sidebars, trending topics, premium upsells, and more
-- **Classic UI**: Restore Twitter bird, blue theme, and original button labels
-- **Clean Design**: Fix notification badges, compose buttons, and broken UI elements
+Note from the AI's assitant: 100% of this codebase was written by AI. I do not have time to make it good or to update it, but contributions and PRs are welcome as long as you test them on the proper browser beforehand!
 
 ## 🚀 Installation
 
@@ -29,21 +24,11 @@ A sleek theme extension that brings back classic Twitter vibes to X with powerfu
 3. Navigate to the `firefox` folder inside BlueRaven
 4. Select `manifest.json` from the Firefox folder
 5. The BlueRaven icon will appear in your toolbar
-6. Note: Firefox requires reloading the extension each time you restart the browser
 
 ## 💡 Usage
-
 1. Click the BlueRaven icon in your browser toolbar
 2. Toggle features on/off as desired
 3. Changes apply instantly - no refresh needed!
-
-## 🛠️ Contributing
-
-Found a bug or have a feature request? Open an issue or submit a PR!
-
-## 📜 License
-
-MIT License - Feel free to modify and share!
 
 ---
 
