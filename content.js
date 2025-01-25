@@ -180,6 +180,7 @@ const FeatureHandlers = {
               height: ${config.replacementData.height} !important;
               display: block !important;
             }
+            ${config.replacementData.styles || ''}
           `;
           break;
         case 'buttonReplace':
@@ -206,6 +207,15 @@ const FeatureHandlers = {
         .map(selector => `${selector} { ${config.styles} }`)
         .join('\n');
       StyleManager.applyStyle(`styleFixes-${key}`, css);
+    }
+  },
+
+  buttonColors: (config, enabled, key) => {
+    if (enabled) {
+      const css = Object.entries(config.selectors)
+        .map(([type, selector]) => `${selector} { ${config.styles[type]} }`)
+        .join('\n');
+      StyleManager.applyStyle(`buttonColors-${key}`, css);
     }
   }
 }; 
