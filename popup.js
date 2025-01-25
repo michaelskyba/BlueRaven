@@ -2,42 +2,45 @@ document.addEventListener('DOMContentLoaded', async () => {
   const settingsDiv = document.getElementById('settings');
   const { settings } = await chrome.storage.sync.get('settings');
 
-  // Create UI for each mod type
-  Object.entries(TWITTER_MODS).forEach(([modType, modConfig]) => {
-    const section = document.createElement('div');
-    section.className = 'mod-section';
-    
-    // Add section header
-    const header = document.createElement('h3');
-    header.textContent = modConfig.description;
-    header.style.margin = '0 0 12px 0';
-    section.appendChild(header);
+  // Section order and titles
+  const sections = [
+    { id: 'buttonColors', title: 'Button Colors' },
+    { id: 'replaceElements', title: 'UI Elements' },
+    { id: 'styleFixes', title: 'Style Fixes' },
+    { id: 'hideElements', title: 'Hide Elements' }
+  ];
 
-    if (modType === 'theme') {
-      // Single toggle for theme
-      const themeToggle = createToggle(
-        'theme',
-        'Enable custom theme',
-        settings?.theme?.enabled ?? modConfig.enabled,
-        (checked) => updateSetting('theme', 'enabled', checked)
-      );
-      section.appendChild(themeToggle);
-    } else {
+  // Create sections in order
+  sections.forEach(({ id, title }) => {
+    if (TWITTER_MODS[id]) {
+      const sectionDiv = document.createElement('div');
+      
+      // Add section title
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'section-title';
+      titleDiv.textContent = title;
+      sectionDiv.appendChild(titleDiv);
+
+      // Add section content
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'mod-section';
+
       // Add toggles for each sub-setting
-      Object.entries(modConfig).forEach(([key, config]) => {
+      Object.entries(TWITTER_MODS[id]).forEach(([key, config]) => {
         if (typeof config === 'object' && 'enabled' in config) {
           const item = createToggle(
-            `${modType}-${key}`,
+            `${id}-${key}`,
             config.description,
-            settings?.[modType]?.[key]?.enabled ?? config.enabled,
-            (checked) => updateSetting(modType, key, checked)
+            settings?.[id]?.[key]?.enabled ?? config.enabled,
+            (checked) => updateSetting(id, key, checked)
           );
-          section.appendChild(item);
+          contentDiv.appendChild(item);
         }
       });
-    }
 
-    settingsDiv.appendChild(section);
+      sectionDiv.appendChild(contentDiv);
+      settingsDiv.appendChild(sectionDiv);
+    }
   });
 });
 
@@ -65,13 +68,9 @@ async function updateSetting(modType, key, value) {
     console.log(`Updating setting: ${modType}.${key} = ${value}`);
     const { settings = {} } = await chrome.storage.sync.get('settings');
     
-    if (key === 'enabled') {
-      settings[modType] = { ...settings[modType], enabled: value };
-    } else {
-      if (!settings[modType]) settings[modType] = {};
-      if (!settings[modType][key]) settings[modType][key] = {};
-      settings[modType][key].enabled = value;
-    }
+    if (!settings[modType]) settings[modType] = {};
+    if (!settings[modType][key]) settings[modType][key] = {};
+    settings[modType][key].enabled = value;
     
     console.log('New settings:', settings);
     await chrome.storage.sync.set({ settings });
@@ -92,7 +91,7 @@ async function updateSetting(modType, key, value) {
     await Promise.all(updatePromises);
     
     // Visual feedback
-    const checkbox = document.getElementById(key === 'enabled' ? modType : `${modType}-${key}`);
+    const checkbox = document.getElementById(`${modType}-${key}`);
     if (checkbox) {
       checkbox.classList.add('updated');
       setTimeout(() => checkbox.classList.remove('updated'), 500);
