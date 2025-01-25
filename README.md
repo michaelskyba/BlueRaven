@@ -18,7 +18,10 @@ A sleek theme extension that brings back classic Twitter vibes to X with powerfu
 2. Enable "Developer mode" in the top right
 3. Click "Load unpacked"
 4. Select the BlueRaven folder you downloaded
-5. Pin BlueRaven to your toolbar for easy access
+5. Click the puzzle piece icon in your Chrome toolbar
+6. Find BlueRaven in the dropdown list
+7. Click the pin icon 📌 next to it to keep it visible
+8. The BlueRaven icon should now appear in your toolbar!
 
 ### Firefox
 1. Visit `about:debugging#/runtime/this-firefox`
