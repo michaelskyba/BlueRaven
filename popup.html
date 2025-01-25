@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      width: 300px;
+      padding: 16px;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .mod-section { 
+      margin: 16px 0;
+      padding: 8px;
+      border-radius: 8px;
+      background: #f5f5f5;
+    }
+    .mod-item { 
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+    }
+    .mod-item input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    .mod-item label {
+      flex: 1;
+      cursor: pointer;
+    }
+    .updated {
+      animation: flash 0.5s;
+    }
+    @keyframes flash {
+      0% { background-color: #4caf50; }
+      100% { background-color: transparent; }
+    }
+  </style>
+</head>
+<body>
+  <h2>Twitter Theme Settings</h2>
+  <div id="settings"></div>
+  <script src="config.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html> 
