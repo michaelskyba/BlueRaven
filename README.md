@@ -26,8 +26,10 @@ A sleek theme extension that brings back classic Twitter vibes to X with powerfu
 ### Firefox
 1. Visit `about:debugging#/runtime/this-firefox`
 2. Click "Load Temporary Add-on"
-3. Select any file from the BlueRaven folder
-4. Note: Firefox requires reloading the extension each time you restart the browser
+3. Navigate to the `firefox` folder inside BlueRaven
+4. Select `manifest.json` from the Firefox folder
+5. The BlueRaven icon will appear in your toolbar
+6. Note: Firefox requires reloading the extension each time you restart the browser
 
 ## 💡 Usage
 
@@ -45,4 +47,4 @@ MIT License - Feel free to modify and share!
 
 ---
 
-Made with 💙 for the Twitter community
+🩵
