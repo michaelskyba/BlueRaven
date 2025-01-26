@@ -150,9 +150,12 @@ const TWITTER_MODS = {
       styles: `
         margin: 0 auto !important;
         float: none !important;
+        width: 100% !important;
         max-width: 600px !important;
-        width: 600px !important;
-        flex: 0 1 600px !important;
+        flex-grow: 1 !important;
+        flex-basis: auto !important;
+        flex-direction: column !important;
+        flex-shrink: 0 !important;
         -webkit-box-flex: 0 !important;
       `
     },
