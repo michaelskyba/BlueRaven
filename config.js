@@ -54,6 +54,7 @@ const TWITTER_MODS = {
       description: "Hide Premium Button",
       selectors: [
         'a[data-testid="premium-hub-tab"]',
+        'a[data-testid="premium-signup-tab"]',
         'a[aria-label="Premium"][role="link"]'
       ]
     },
@@ -61,7 +62,8 @@ const TWITTER_MODS = {
       enabled: false,
       description: "Hide Community Notes Button",
       selectors: [
-        'a[aria-label="Community Notes"][role="link"]'
+        'a[aria-label="Community Notes"][role="link"]',
+        'a[href$="i/communitynotes"]'
       ]
     }
   },
