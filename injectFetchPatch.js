@@ -1,8 +1,14 @@
+// /home/oboro/src/BlueRaven/injectFetchPatch.js
 (function() {
 	// Save original XMLHttpRequest methods
 	const origOpen = XMLHttpRequest.prototype.open;
 	const origSend = XMLHttpRequest.prototype.send;
 	const origSetRequestHeader = XMLHttpRequest.prototype.setRequestHeader;
+
+	const inboxRequestHeaders = {
+		"authorization": null,
+		"x-csrf-token": null,
+	};
 
 	// Variables to store the counts
 	let directCount = 0;
@@ -44,7 +50,6 @@
 				}
 			}
 
-			return badge !== null;
 		}
 		return false;
 	}
@@ -75,7 +80,7 @@
 
 	// Override setRequestHeader to capture headers
 	XMLHttpRequest.prototype.setRequestHeader = function(header, value) {
-		this._requestHeaders[header] = value;
+		this._requestHeaders[header.toLowerCase()] = value; // Normalize header name to lowercase
 		return origSetRequestHeader.apply(this, arguments);
 	};
 
@@ -87,6 +92,17 @@
 		console.log(`URL: ${this._url}`);
 		console.log("Request Headers:", this._requestHeaders);
 		console.log("Request Body:", sendArgs[0]);
+
+		// Check and update inboxRequestHeaders if necessary
+		for (const header in inboxRequestHeaders) {
+			if (this._requestHeaders.hasOwnProperty(header)) {
+				const newValue = this._requestHeaders[header];
+				if (inboxRequestHeaders[header] !== newValue) {
+					console.log(`Updating inboxRequestHeaders: ${header} changed from "${inboxRequestHeaders[header]}" to "${newValue}"`);
+					inboxRequestHeaders[header] = newValue;
+				}
+			}
+		}
 
 		// Add event listener for when the response is loaded
 		this.addEventListener('load', () => {
