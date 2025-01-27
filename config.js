@@ -49,6 +49,17 @@ const TWITTER_MODS = {
         'div[role="presentation"]:has(div[style*="background-color: rgb(75, 78, 82)"][style*="border-radius: 9999px"])'
       ]
     },
+    communities: {
+      enabled: false,
+      description: "Hide Communities Button",
+      selectors: [
+        'a[aria-label="Communities"][role="link"]',
+
+        // It's fine to use an href selector: this won't match random links
+        // posted to mysite.com/mycommunities because X will convert them t.co/xyz
+        'a[href$="/communities"]'
+      ]
+    },
     premium: {
       enabled: false,
       description: "Hide Premium Button",
@@ -57,6 +68,14 @@ const TWITTER_MODS = {
         'a[data-testid="premium-signup-tab"]',
         'a[aria-label="Premium"][role="link"]'
       ]
+    },
+    business: {
+      enabled: false,
+      description: "Hide Business Button",
+      selectors: [
+        'a[aria-label="Business"][role="link"]',
+        'a[href$="i/verified-orgs-signup"]'
+      ],
     },
     communityNotes: {
       enabled: false,
