@@ -1,18 +1,20 @@
 (function() {
-	// Save original open and send methods
+	// Save original XMLHttpRequest methods
 	const origOpen = XMLHttpRequest.prototype.open;
 	const origSend = XMLHttpRequest.prototype.send;
+	const origSetRequestHeader = XMLHttpRequest.prototype.setRequestHeader;
 
 	// Variables to store the counts
 	let directCount = 0;
 	let groupCount = 0;
 
+	// Function to get display text for messages
 	function getMsgDisplayText() {
 		let text = "";
 
-		if (directCount > 0) text += `${directCount} DM`
-		if (directCount > 0 && groupCount > 0) text += ` | `
-		if (groupCount > 0) text += `${groupCount} GC`
+		if (directCount > 0) text += `${directCount} DM`;
+		if (directCount > 0 && groupCount > 0) text += ` | `;
+		if (groupCount > 0) text += `${groupCount} GC`;
 
 		return text;
 	}
@@ -22,18 +24,25 @@
 		const messagesLink = document.querySelector('a[href$="/messages"]');
 
 		if (messagesLink) {
-			const badge = messagesLink.querySelector('div[aria-label~="unread"] span')
-			if (badge && badge.innerHTML !== directCount.toString()) badge.innerHTML = directCount.toString()
+			const badge = messagesLink.querySelector('div[aria-label~="unread"] span');
+			if (badge && badge.innerHTML !== directCount.toString()) {
+				badge.innerHTML = directCount.toString();
+			}
 
 			let msgDisplaySpan = messagesLink.querySelector("span.text");
 			if (!msgDisplaySpan) {
 				msgDisplaySpan = Array.from(messagesLink.querySelectorAll("span")).find(el => el.innerHTML === "Messages");
-				msgDisplaySpan.className += " text";
+				if (msgDisplaySpan) {
+					msgDisplaySpan.className += " text";
+				}
 			}
 
-			const msgDisplayText = getMsgDisplayText();
-			if (msgDisplaySpan.innerHTML !== msgDisplayText)
-				msgDisplaySpan.innerHTML = msgDisplayText;
+			if (msgDisplaySpan) {
+				const msgDisplayText = getMsgDisplayText();
+				if (msgDisplaySpan.innerHTML !== msgDisplayText) {
+					msgDisplaySpan.innerHTML = msgDisplayText;
+				}
+			}
 
 			return badge !== null;
 		}
@@ -56,35 +65,57 @@
 		});
 	}
 
-	// Patch open method
+	// Override the open method to store method and URL
 	XMLHttpRequest.prototype.open = function(method, url) {
-		this._url = url; // Store the request URL for later
+		this._method = method;
+		this._url = url;
+		this._requestHeaders = {}; // Initialize an object to store request headers
 		return origOpen.apply(this, arguments);
 	};
 
-	// Patch send method
-	XMLHttpRequest.prototype.send = function(...sendArgs) {
-		console.log(this, sendArgs)
+	// Override setRequestHeader to capture headers
+	XMLHttpRequest.prototype.setRequestHeader = function(header, value) {
+		this._requestHeaders[header] = value;
+		return origSetRequestHeader.apply(this, arguments);
+	};
 
+	// Override send method
+	XMLHttpRequest.prototype.send = function(...sendArgs) {
+		// Log the request details
+		console.log("=== HTTP Request ===");
+		console.log(`Method: ${this._method}`);
+		console.log(`URL: ${this._url}`);
+		console.log("Request Headers:", this._requestHeaders);
+		console.log("Request Body:", sendArgs[0]);
+
+		// Add event listener for when the response is loaded
 		this.addEventListener('load', () => {
-			if (!this.responseURL.includes('/i/api/1.1/dm/inbox_initial_state.json'))
+			// Log response headers
+			const responseHeaders = this.getAllResponseHeaders();
+			console.log("=== HTTP Response ===");
+			console.log(`Status: ${this.status} ${this.statusText}`);
+			console.log("Response Headers:", responseHeaders);
+
+			// Proceed only if the response URL matches the desired pattern
+			if (!this.responseURL.includes('/i/api/1.1/dm/inbox_initial_state.json')) {
 				return;
+			}
 
 			try {
-				// The raw string
+				// The raw response text
 				const bodyText = this.responseText;
 
-				// 1) Parse JSON
+				// Parse JSON
 				const data = JSON.parse(bodyText);
 
 				// Grab last_seen_event_id
 				const lastSeenEventId = data.inbox_initial_state.last_seen_event_id;
 				console.log("Last seen event ID:", lastSeenEventId);
 
-				// Convert to BigInt so we can compare numerically
+				// Convert to BigInt for numerical comparison
 				const lastSeen = BigInt(lastSeenEventId);
 
-				// 2) Loop through all entries and find any 'message' with id > last_seen_event_id
+				// Loop through all entries to find new messages
 				const { entries = [] } = data.inbox_initial_state;
 				const newMessages = [];
 
@@ -99,10 +130,11 @@
 					}
 				}
 
-				// 3 & 4) For each new message, log ID, text, and whether direct or group
+				// Reset counts
 				directCount = 0;
 				groupCount  = 0;
 
+				// Process each new message
 				for (const msg of newMessages) {
 					const msgId   = msg.id;
 					const text    = msg.message_data.text;
@@ -119,15 +151,7 @@
 					}
 				}
 
-				// 5) Prepare the total counts for innerHTML
-				// desiredInnerHTML = ""
-				// if (directCount > 0)
-				   //  desiredInnerHTML += `<span style="background-color:#1d9bf0;padding:5px;border-radius:5px;border:2px solid #1d9bf0;">${directCount} DM</span>`
-				// if (groupCount > 0)
-				   //  desiredInnerHTML += `<span style="padding:5px;border:2px solid white;">${groupCount} GC</span>`;
-
-
-				// Attempt to update the messages link immediately
+				// Update the messages link in the UI
 				if (!updateMessagesLink()) {
 					// If the element doesn't exist yet, set up a MutationObserver
 					observeDOMForMessagesLink();
