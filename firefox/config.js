@@ -58,6 +58,14 @@ const TWITTER_MODS = {
         'a[aria-label="Premium"][role="link"]'
       ]
     },
+    business: {
+      enabled: false,
+      description: "Hide Business Button",
+      selectors: [
+        'a[aria-label="Business"][role="link"]',
+        'a[href$="i/verified-orgs-signup"]'
+      ],
+    },
     communityNotes: {
       enabled: false,
       description: "Hide Community Notes Button",
