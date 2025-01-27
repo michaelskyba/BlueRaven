@@ -1,22 +1,20 @@
-console.log('Content script loaded');
-
 let activeStyles = new Map();
 
 const injectTheme = async () => {
   try {
     console.log('Injecting theme...');
     const { settings } = await chrome.storage.sync.get('settings');
-    console.log('Retrieved settings:', JSON.stringify(settings, null, 2));
+    // console.log('Retrieved settings:', JSON.stringify(settings, null, 2));
     
     StyleManager.removeAllStyles();
     
     if (!settings) {
-      console.log('No settings found, skipping modifications');
+      // console.log('No settings found, skipping modifications');
       return;
     }
     
     Object.entries(TWITTER_MODS).forEach(([modType, modConfig]) => {
-      console.log(`Checking ${modType}:`, settings?.[modType]);
+      // console.log(`Checking ${modType}:`, settings?.[modType]);
       
       if (modType === 'theme') {
         FeatureHandlers.theme(modConfig, settings?.theme?.enabled === true);

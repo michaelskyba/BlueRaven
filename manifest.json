@@ -18,7 +18,7 @@
       "128": "icon.png"
     }
   },
-  "permissions": ["storage"],
+  "permissions": ["storage", "scripting", "activeTab", "tabs"],
   "host_permissions": [
     "*://twitter.com/*",
     "*://x.com/*"

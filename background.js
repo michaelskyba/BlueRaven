@@ -1,3 +1,22 @@
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+	console.log("tab updated", tab, tab.url)
+
+  // Check if this update is "complete" and if we're on x.com
+
+  // if (tab.url.includes('x.com')) {
+  if (changeInfo.status === 'complete' && tab.url.includes('x.com')) {
+    // Inject a script that monkey-patches fetch in the MAIN world
+    chrome.scripting.executeScript({
+      target: { tabId },
+      world: 'MAIN',
+      files: ['injectFetchPatch.js']
+    }, () => {
+      console.log('Fetch patch injected for tab:', tabId);
+    });
+  }
+});
+
+
 chrome.runtime.onInstalled.addListener(async () => {
   console.log('Extension installed/updated');
   try {

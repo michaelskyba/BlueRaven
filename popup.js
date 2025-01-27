@@ -65,7 +65,7 @@ function createToggle(id, label, checked, onChange) {
 
 async function updateSetting(modType, key, value) {
   try {
-    console.log(`Updating setting: ${modType}.${key} = ${value}`);
+    // console.log(`Updating setting: ${modType}.${key} = ${value}`);
     const { settings = {} } = await chrome.storage.sync.get('settings');
     
     if (!settings[modType]) settings[modType] = {};
