@@ -87,47 +87,50 @@
 		return Object.values(inboxRequestHeaders).every((value) => value !== null);
 	}
 
+	function inboxRequest() {
+		const requestURL =
+			"https://x.com/i/api/1.1/dm/inbox_initial_state.json?nsfw_filtering_enabled=false&filter_low_quality=false&include_quality=all&include_profile_interstitial_type=1&include_blocking=1&include_blocked_by=1&include_followed_by=1&include_want_retweets=1&include_mute_edge=1&include_can_dm=1&include_can_media_tag=1&include_ext_is_blue_verified=1&include_ext_verified_type=1&include_ext_profile_image_shape=1&skip_status=1&dm_secret_conversations_enabled=false&krs_registration_enabled=true&cards_platform=Web-12&include_cards=1&include_ext_alt_text=true&include_ext_limited_action_results=true&include_quote_count=true&include_reply_count=1&tweet_mode=extended&include_ext_views=true&dm_users=true&include_groups=true&include_inbox_timelines=true&include_ext_media_color=true&supports_reactions=true&supports_edit=true&include_ext_edit_control=true&include_ext_business_affiliations_label=true&include_ext_parody_commentary_fan_label=true&ext=mediaColor%2CaltText%2CmediaStats%2ChighlightedLabel%2CparodyCommentaryFanLabel%2CvoiceInfo%2CbirdwatchPivot%2CsuperFollowMetadata%2CunmentionInfo%2CeditControl%2Carticle";
+
+		// Create a new XMLHttpRequest
+		const xhr = new XMLHttpRequest();
+		xhr.open("GET", requestURL, true);
+		xhr.withCredentials = true; // Include cookies
+
+		// Set the required headers
+		for (const header in inboxRequestHeaders) {
+			if (inboxRequestHeaders.hasOwnProperty(header)) {
+				xhr.setRequestHeader(header, inboxRequestHeaders[header]);
+			}
+		}
+
+		// Define the onload handler
+		xhr.onload = function () {
+			if (xhr.status >= 200 && xhr.status < 300) {
+				// console.log("=== Periodic inbox_initial_state.json Response ===");
+				// console.log("Status:", xhr.status, xhr.statusText);
+				// console.log("Response Headers:", xhr.getAllResponseHeaders());
+				// console.log("Response Body:", xhr.responseText);
+			} else {
+				console.error("Periodic request failed with status:", xhr.status);
+			}
+		};
+
+		// Define the onerror handler
+		xhr.onerror = function () {
+			console.error("Periodic request encountered an error.");
+		};
+
+		// Send the request
+		xhr.send();
+	}
+
 	// Function to start periodic inbox_initial_state.json requests
 	function startPeriodicInboxRequest() {
 		if (periodicRequestStarted) return; // Prevent multiple intervals
 		periodicRequestStarted = true;
 
-		const requestURL =
-			"https://x.com/i/api/1.1/dm/inbox_initial_state.json?nsfw_filtering_enabled=false&filter_low_quality=false&include_quality=all&include_profile_interstitial_type=1&include_blocking=1&include_blocked_by=1&include_followed_by=1&include_want_retweets=1&include_mute_edge=1&include_can_dm=1&include_can_media_tag=1&include_ext_is_blue_verified=1&include_ext_verified_type=1&include_ext_profile_image_shape=1&skip_status=1&dm_secret_conversations_enabled=false&krs_registration_enabled=true&cards_platform=Web-12&include_cards=1&include_ext_alt_text=true&include_ext_limited_action_results=true&include_quote_count=true&include_reply_count=1&tweet_mode=extended&include_ext_views=true&dm_users=true&include_groups=true&include_inbox_timelines=true&include_ext_media_color=true&supports_reactions=true&supports_edit=true&include_ext_edit_control=true&include_ext_business_affiliations_label=true&include_ext_parody_commentary_fan_label=true&ext=mediaColor%2CaltText%2CmediaStats%2ChighlightedLabel%2CparodyCommentaryFanLabel%2CvoiceInfo%2CbirdwatchPivot%2CsuperFollowMetadata%2CunmentionInfo%2CeditControl%2Carticle";
-
-		setInterval(() => {
-			// Create a new XMLHttpRequest
-			const xhr = new XMLHttpRequest();
-			xhr.open("GET", requestURL, true);
-			xhr.withCredentials = true; // Include cookies
-
-			// Set the required headers
-			for (const header in inboxRequestHeaders) {
-				if (inboxRequestHeaders.hasOwnProperty(header)) {
-					xhr.setRequestHeader(header, inboxRequestHeaders[header]);
-				}
-			}
-
-			// Define the onload handler
-			xhr.onload = function () {
-				if (xhr.status >= 200 && xhr.status < 300) {
-					console.log("=== Periodic inbox_initial_state.json Response ===");
-					console.log("Status:", xhr.status, xhr.statusText);
-					console.log("Response Headers:", xhr.getAllResponseHeaders());
-					console.log("Response Body:", xhr.responseText);
-				} else {
-					console.error("Periodic request failed with status:", xhr.status);
-				}
-			};
-
-			// Define the onerror handler
-			xhr.onerror = function () {
-				console.error("Periodic request encountered an error.");
-			};
-
-			// Send the request
-			xhr.send();
-		}, 10000); // 10,000 milliseconds = 10 seconds
+		inboxRequest()
+		setInterval(inboxRequest, 10000); // 10,000 milliseconds = 10 seconds
 	}
 
 	// Override the open method to store method and URL
@@ -147,11 +150,11 @@
 	// Override send method
 	XMLHttpRequest.prototype.send = function (...sendArgs) {
 		// Log the request details
-		console.log("=== HTTP Request ===");
-		console.log(`Method: ${this._method}`);
+		// console.log("=== HTTP Request ===");
+		// console.log(`Method: ${this._method}`);
 		console.log(`URL: ${this._url}`);
-		console.log("Request Headers:", this._requestHeaders);
-		console.log("Request Body:", sendArgs[0]);
+		// console.log("Request Headers:", this._requestHeaders);
+		// console.log("Request Body:", sendArgs[0]);
 
 		// Check and update inboxRequestHeaders if necessary
 		for (const header in inboxRequestHeaders) {
@@ -175,9 +178,9 @@
 		this.addEventListener("load", () => {
 			// Log response headers
 			const responseHeaders = this.getAllResponseHeaders();
-			console.log("=== HTTP Response ===");
-			console.log(`Status: ${this.status} ${this.statusText}`);
-			console.log("Response Headers:", responseHeaders);
+			// console.log("=== HTTP Response ===");
+			// console.log(`Status: ${this.status} ${this.statusText}`);
+			// console.log("Response Headers:", responseHeaders);
 
 			// Proceed only if the response URL matches the desired pattern
 			if (
@@ -195,7 +198,7 @@
 
 				// Grab last_seen_event_id
 				const lastSeenEventId = data.inbox_initial_state.last_seen_event_id;
-				console.log("Last seen event ID:", lastSeenEventId);
+				// console.log("Last seen event ID:", lastSeenEventId);
 
 				// Convert to BigInt for numerical comparison
 				const lastSeen = BigInt(lastSeenEventId);
