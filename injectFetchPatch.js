@@ -36,33 +36,59 @@
 
 	// Function to update the messages link if it exists
 	function updateMessagesLink() {
+		console.log("updating")
+
 		const messagesLink = document.querySelector('a[href$="/messages"]');
+		if (!messagesLink)
+			return false;
 
-		if (messagesLink) {
-			const badge = messagesLink.querySelector(
-				'div[aria-label~="unread"] span',
-			);
-			if (badge && badge.innerHTML !== directCount.toString()) {
-				badge.innerHTML = directCount.toString();
-			}
+		const unreadContainer = messagesLink.querySelector("div.css-175oi2r div.css-175oi2r");
+		const topSvg = messagesLink.querySelector("svg");
+		const originalBadge = unreadContainer.querySelector('div[aria-label~="unread"]');
 
-			let msgDisplaySpan = messagesLink.querySelector("span.text");
-			if (!msgDisplaySpan) {
-				msgDisplaySpan = Array.from(messagesLink.querySelectorAll("span")).find(
-					(el) => el.innerHTML === "Messages",
-				);
-				if (msgDisplaySpan) {
-					msgDisplaySpan.className += " text";
-				}
-			}
+		originalBadge && originalBadge.remove();
 
-			if (msgDisplaySpan) {
-				const msgDisplayText = getMsgDisplayText();
-				if (msgDisplaySpan.innerHTML !== msgDisplayText) {
-					msgDisplaySpan.innerHTML = msgDisplayText;
-				}
-			}
+		let directBadge = unreadContainer.querySelector("div.blueRavenDM");
+		let groupBadge = unreadContainer.querySelector("div.blueRavenGC");
+
+		if (!directBadge && directCount > 0) {
+			directBadge = document.createElement("div");
+			directBadge.className = "css-146c3p1 r-1ttztb7 r-qvutc0 r-37j5jr r-1gkfh8e r-56xrmm r-16dba41 r-1awozwy r-l5o3uw r-sdzlij r-6koalj r-1q142lx r-10ptun7 r-1777fci r-285fr0 r-lrvibr r-3s2u2q r-1xc7w19 r-1phboty r-rs99b7 r-1tjplnt r-2utimh r-u8s1d r-1m4drjs";
+			directBadge.className += " blueRavenDM"
+
+			const directBadgeSpan = document.createElement("span");
+			directBadgeSpan.className = "css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3";
+			directBadgeSpan.style.color = "white"
+			directBadgeSpan.innerHTML = directCount.toString();
+
+			directBadge.appendChild(directBadgeSpan)
+			topSvg.after(directBadge)
 		}
+		if (directBadge && directCount == 0)
+			directBadge.remove()
+
+		if (!groupBadge && groupCount > 0) {
+			groupBadge = document.createElement("div");
+			groupBadge.className = "css-146c3p1 r-1ttztb7 r-qvutc0 r-37j5jr r-1gkfh8e r-56xrmm r-16dba41 r-1awozwy r-l5o3uw r-sdzlij r-6koalj r-1q142lx r-10ptun7 r-1777fci r-285fr0 r-lrvibr r-3s2u2q r-1xc7w19 r-1phboty r-rs99b7 r-1tjplnt r-2utimh r-u8s1d r-1m4drjs";
+			groupBadge.className += " blueRavenGC"
+			groupBadge.style.backgroundColor = "#555"
+
+			if (directBadge)
+				groupBadge.style.right = "-20px";
+
+			const groupBadgeSpan = document.createElement("span");
+			groupBadgeSpan.className = "css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3";
+			groupBadgeSpan.style.color = "white"
+			groupBadgeSpan.innerHTML = groupCount.toString();
+
+			groupBadge.appendChild(groupBadgeSpan)
+
+			const last = directBadge || topSvg;
+			last.after(groupBadge);
+		}
+		if (groupBadge && groupCount == 0)
+			groupBadge.remove()
+
 		return false;
 	}
 
