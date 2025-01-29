@@ -144,7 +144,7 @@ const FeatureHandlers = {
           css = `
             ${targetSelector} svg { display: none !important; }
             ${targetSelector} .css-1jxf684 {
-              background-image: url('data:image/svg+xml;charset=utf-8,${encodeURIComponent(config.replacementData.svg)}');
+              background-image: url('data:image/svg+xml;charset=utf-8,${config.replacementData.svg}');
               background-repeat: no-repeat;
               background-position: center;
               width: ${config.replacementData.width} !important;
