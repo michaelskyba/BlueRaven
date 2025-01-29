@@ -132,6 +132,12 @@ const FeatureHandlers = {
         return;
       }
 
+      // Automatically inject the selector name into the style, to support
+      // the same modification to fallback targets
+      const targetReplacementInput = "BLUERAVEN_TARGET";
+      const rawStyles = config.replacementData.styles || "";
+      const configStyles = rawStyles.replaceAll(targetReplacementInput, targetSelector);
+
       let css = '';
       switch (config.type) {
         case 'logoReplace':
@@ -145,7 +151,7 @@ const FeatureHandlers = {
               height: ${config.replacementData.height} !important;
               display: block !important;
             }
-            ${config.replacementData.styles || ''}
+            ${configStyles}
           `;
           break;
         case 'buttonReplace':
@@ -158,7 +164,7 @@ const FeatureHandlers = {
               visibility: visible;
               position: absolute;
             }
-            ${config.replacementData.styles}
+            ${configStyles}
           `;
           break;
         default:
