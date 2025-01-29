@@ -115,37 +115,65 @@ const FeatureHandlers = {
 
   replaceElements: (config, enabled, key) => {
     if (enabled) {
+      let targetSelector = null;
+
+      if (Array.isArray(config.targetCandidates)) {
+        for (const selector of config.targetCandidates) {
+          if (document.querySelector(selector)) {
+            targetSelector = selector;
+            console.log(`Found existing selector for ${key}: ${selector}`);
+            break;
+          }
+        }
+      }
+
+      if (!targetSelector) {
+        console.log(`No valid target found for ${key}, skipping replacement.`);
+        return;
+      }
+
+      // Automatically inject the selector name into the style, to support
+      // the same modification to fallback targets
+      const targetReplacementInput = "BLUERAVEN_TARGET";
+      const rawStyles = config.replacementData.styles || "";
+      const configStyles = rawStyles.replaceAll(targetReplacementInput, targetSelector);
+
       let css = '';
       switch (config.type) {
         case 'logoReplace':
           css = `
-            ${config.target} svg { display: none !important; }
-            ${config.target} .css-1jxf684 {
-              background-image: url('data:image/svg+xml;charset=utf-8,${config.replacementData.svg}');
+            ${targetSelector} svg { display: none !important; }
+            ${targetSelector} .css-1jxf684 {
+              background-image: url('data:image/svg+xml;charset=utf-8,${encodeURIComponent(config.replacementData.svg)}');
               background-repeat: no-repeat;
               background-position: center;
               width: ${config.replacementData.width} !important;
               height: ${config.replacementData.height} !important;
               display: block !important;
             }
-            ${config.replacementData.styles || ''}
+            ${configStyles}
           `;
           break;
         case 'buttonReplace':
           css = `
-            ${config.target} span.css-1jxf684 span {
+            ${targetSelector} span.css-1jxf684 span {
               visibility: hidden;
             }
-            ${config.target} span.css-1jxf684 span::before {
+            ${targetSelector} span.css-1jxf684 span::before {
               content: '${config.replacementData.text}';
               visibility: visible;
               position: absolute;
             }
-            ${config.replacementData.styles}
+            ${configStyles}
           `;
           break;
+        default:
+          console.warn(`Unknown replaceElements type: ${config.type}`);
+          return;
       }
+
       StyleManager.applyStyle(`replaceElements-${key}`, css);
+      console.log(`Applied replaceElements style for ${key}`);
     }
   },
 
@@ -166,4 +194,4 @@ const FeatureHandlers = {
       StyleManager.applyStyle(`buttonColors-${key}`, css);
     }
   }
-}; 
+};

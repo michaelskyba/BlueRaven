@@ -87,13 +87,15 @@ const TWITTER_MODS = {
     }
   },
 
-  // UI Element Replacements
+  // UI Element Replacements.
+  // In styles, all instances of "BLUERAVEN_TARGET" get replaced with the found
+  // target selector
   replaceElements: {
     xLogo: {
       enabled: false,
       description: "Use Twitter Bird Logo",
       type: 'logoReplace',
-      target: 'a[aria-label="X"]',
+      targetCandidates: ['a[aria-label="X"]'],
       replacementData: {
         svg: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="%231DA1F2"><path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"/></svg>`,
         width: '24px',
@@ -104,54 +106,57 @@ const TWITTER_MODS = {
       enabled: false,
       description: "Replace 'Post' with 'Tweet'",
       type: 'buttonReplace',
-      target: 'button[data-testid="tweetButtonInline"]',
+      targetCandidates: [
+        'button[data-testid="tweetButtonInline"]',
+        'a[data-testid="SideNav_NewTweet_Button"]',
+      ],
       replacementData: {
         text: 'Tweet',
         styles: `
           /* Button width and text alignment */
-          button[data-testid="tweetButtonInline"] {
+          BLUERAVEN_TARGET {
             min-width: 56px !important;
             width: auto !important;
             padding: 0 12px !important;
             height: 32px !important;
             margin-left: 12px !important;
           }
-          button[data-testid="tweetButtonInline"] div {
+          BLUERAVEN_TARGET div {
             justify-content: center !important;
             align-items: center !important;
             width: 100% !important;
           }
-          button[data-testid="tweetButtonInline"] span.css-1jxf684 {
+          BLUERAVEN_TARGET span.css-1jxf684 {
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
             width: 100% !important;
           }
           /* Empty the text content */
-          button[data-testid="tweetButtonInline"] span.css-1jxf684 span.r-poiln3 {
+          BLUERAVEN_TARGET span.css-1jxf684 span.r-poiln3 {
             text-indent: -9999px !important;
             font-size: 0 !important;
           }
-          button[data-testid="tweetButtonInline"] span.css-1jxf684 span::before {
+          BLUERAVEN_TARGET span.css-1jxf684 span.css-1jxf684 span::before {
             position: static !important;
             transform: none !important;
             white-space: nowrap !important;
             content: 'Tweet' !important;
             text-indent: 0 !important;
-            font-size: 14px !important;
+            font-size: 17px !important;
           }
           /* Active state */
-          button[data-testid="tweetButtonInline"]:not([disabled]) {
+          BLUERAVEN_TARGET:not([disabled]) {
             background-color: rgb(29, 155, 240) !important;
           }
-          button[data-testid="tweetButtonInline"]:not([disabled]) div {
+          BLUERAVEN_TARGET:not([disabled]) div {
             color: rgb(255, 255, 255) !important;
           }
           /* Disabled state */
-          button[data-testid="tweetButtonInline"][disabled] {
+          BLUERAVEN_TARGET[disabled] {
             background-color: rgba(29, 155, 240, 0.4) !important;
           }
-          button[data-testid="tweetButtonInline"][disabled] div {
+          BLUERAVEN_TARGET[disabled] div {
             color: rgb(255, 255, 255) !important;
           }
         `
@@ -171,9 +176,12 @@ const TWITTER_MODS = {
       styles: `
         margin: 0 auto !important;
         float: none !important;
+        width: 100% !important;
         max-width: 600px !important;
-        width: 600px !important;
-        flex: 0 1 600px !important;
+        flex-grow: 1 !important;
+        flex-basis: auto !important;
+        flex-direction: column !important;
+        flex-shrink: 0 !important;
         -webkit-box-flex: 0 !important;
       `
     },
