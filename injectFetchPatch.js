@@ -1,4 +1,6 @@
 (function () {
+	let badgeObserver;
+
 	// Save original XMLHttpRequest methods
 	const origOpen = XMLHttpRequest.prototype.open;
 	const origSend = XMLHttpRequest.prototype.send;
@@ -40,7 +42,7 @@
 
 		const messagesLink = document.querySelector('a[href$="/messages"]');
 		if (!messagesLink)
-			return false;
+			return;
 
 		const unreadContainer = messagesLink.querySelector("div.css-175oi2r div.css-175oi2r");
 		const topSvg = messagesLink.querySelector("svg");
@@ -59,13 +61,18 @@
 			const directBadgeSpan = document.createElement("span");
 			directBadgeSpan.className = "css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3";
 			directBadgeSpan.style.color = "white"
-			directBadgeSpan.innerHTML = directCount.toString();
-
 			directBadge.appendChild(directBadgeSpan)
+
 			topSvg.after(directBadge)
 		}
 		if (directBadge && directCount == 0)
 			directBadge.remove()
+
+		if (directBadge) {
+			const span = directBadge.children[0];
+			if (span.innerHTML != directCount.toString())
+				span.innerHTML = directCount.toString();
+		}
 
 		if (!groupBadge && groupCount > 0) {
 			groupBadge = document.createElement("div");
@@ -79,8 +86,6 @@
 			const groupBadgeSpan = document.createElement("span");
 			groupBadgeSpan.className = "css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3";
 			groupBadgeSpan.style.color = "white"
-			groupBadgeSpan.innerHTML = groupCount.toString();
-
 			groupBadge.appendChild(groupBadgeSpan)
 
 			const last = directBadge || topSvg;
@@ -89,20 +94,24 @@
 		if (groupBadge && groupCount == 0)
 			groupBadge.remove()
 
-		return false;
+		if (groupBadge) {
+			const span = groupBadge.children[0];
+			if (span.innerHTML != groupCount.toString())
+				span.innerHTML = groupCount.toString();
+		}
 	}
 
 	// Function to observe DOM changes and update the messages link when it appears
 	function observeDOMForMessagesLink() {
-		const observer = new MutationObserver((mutations, obs) => {
-			if (updateMessagesLink()) {
-				// Once updated, disconnect the observer
-				obs.disconnect();
-			}
+		if (badgeObserver)
+			return;
+
+		badgeObserver = new MutationObserver((mutations, obs) => {
+			updateMessagesLink();
 		});
 
 		// Start observing the entire document for added nodes
-		observer.observe(document, {
+		badgeObserver.observe(document, {
 			childList: true,
 			subtree: true,
 		});
