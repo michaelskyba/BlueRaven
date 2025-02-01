@@ -70,6 +70,14 @@ const TWITTER_MODS = {
         'a[aria-label="Premium"][role="link"]'
       ]
     },
+    explore: {
+      enabled: false,
+      description: "Hide Explore Tab",
+      selectors: [
+        'a[data-testid="AppTabBar_Explore_Link"]',
+        'a[aria-label="Search and explore"][role="link"]'
+      ]
+    },
     business: {
       enabled: false,
       description: "Hide Business Button",
