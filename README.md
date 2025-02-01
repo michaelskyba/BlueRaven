@@ -2,9 +2,18 @@
 
 <img src="icon.png" alt="BlueRaven Logo" width="128" height="128" style="display: block; margin: 20px auto;">
 
-A sleek theme extension that brings back classic Twitter vibes to X with powerful customization options.
+A simple and customizable browser extension that makes Twitter (sometimes known as X) look more like Twitter.
 
-Note from the AI's assitant: 100% of this codebase was written by AI. I do not have time to make it good or to update it, but contributions and PRs are welcome as long as you test them on the proper browser beforehand!
+More blue, more birds, more vibes, and less Grok.
+
+## Contributions
+
+Contributions are desired and welcome - **please test on both browsers beforehand!**
+
+Note from the AI's assitant: 100% of this codebase was written by AI and I have not reviewed almost any of it.
+
+genAI can generally one-shot most features if you feed it the proper HTML - just show it the popup window and the config.js and then make sure you make edits for both browsers.
+
 
 ## 🚀 Installation
 
