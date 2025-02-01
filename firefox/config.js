@@ -109,9 +109,9 @@ const TWITTER_MODS = {
         height: '24px'
       }
     },
-    tweetButton: {
+    tweetButtonHome: {
       enabled: false,
-      description: "Replace 'Post' with 'Tweet'",
+      description: "Replace 'Post' with 'Tweet' (Home)",
       type: 'buttonReplace',
       target: 'button[data-testid="tweetButtonInline"]',
       replacementData: {
@@ -165,6 +165,106 @@ const TWITTER_MODS = {
           }
         `
       }
+    },
+    tweetButtonSidebar: {
+      enabled: false,
+      description: "Replace 'Post' with 'Tweet' (Left)",
+      type: 'buttonReplace',
+      target: 'a[data-testid="SideNav_NewTweet_Button"]',
+      replacementData: {
+        text: 'Tweet',
+        styles: `
+          a[data-testid="SideNav_NewTweet_Button"] span.css-1jxf684 span.css-1jxf684 {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+          }
+          /* Empty the text content */
+          a[data-testid="SideNav_NewTweet_Button"] span.css-1jxf684 span.r-poiln3 {
+            text-indent: -9999px !important;
+            font-size: 0 !important;
+          }
+          a[data-testid="SideNav_NewTweet_Button"] span.css-1jxf684 span.css-1jxf684 span::before {
+            position: static !important;
+            transform: none !important;
+            white-space: nowrap !important;
+            content: 'Tweet' !important;
+            text-indent: 0 !important;
+            font-size: 17px !important;
+          }
+          /* Active state */
+          a[data-testid="SideNav_NewTweet_Button"]:not([disabled]) {
+            background-color: rgb(29, 155, 240) !important;
+          }
+          a[data-testid="SideNav_NewTweet_Button"]:not([disabled]) div {
+            color: rgb(255, 255, 255) !important;
+          }
+
+          /* Since we're already changing it to blue, also set the glyph color
+          (used when the window width is small) */
+          a[data-testid="SideNav_NewTweet_Button"] svg, a[data-testid="SideNav_NewTweet_Button"] div[dir="ltr"] {
+            color: white !important;
+          }
+        `
+      }
+    },
+    tweetButtonPopup: {
+      enabled: false,
+      description: "Replace 'Post' with 'Tweet' (Compose Popup)",
+      type: 'buttonReplace',
+      target: 'button[data-testid="tweetButton"]',
+      replacementData: {
+        text: 'Tweet',
+        styles: `
+          /* Button width and text alignment */
+          button[data-testid="tweetButton"] {
+            min-width: 56px !important;
+            width: auto !important;
+            padding: 0 12px !important;
+            height: 32px !important;
+            margin-left: 12px !important;
+          }
+          button[data-testid="tweetButton"] div {
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+          }
+          button[data-testid="tweetButton"] span.css-1jxf684 {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+          }
+          /* Empty the text content */
+          button[data-testid="tweetButton"] span.css-1jxf684 span.r-poiln3 {
+            text-indent: -9999px !important;
+            font-size: 0 !important;
+          }
+          button[data-testid="tweetButton"] span.css-1jxf684 span::before {
+            position: static !important;
+            transform: none !important;
+            white-space: nowrap !important;
+            content: 'Tweet' !important;
+            text-indent: 0 !important;
+            font-size: 14px !important;
+          }
+          /* Active state */
+          button[data-testid="tweetButton"]:not([disabled]) {
+            background-color: rgb(29, 155, 240) !important;
+          }
+          button[data-testid="tweetButton"]:not([disabled]) div {
+            color: rgb(255, 255, 255) !important;
+          }
+          /* Disabled state */
+          button[data-testid="tweetButton"][disabled] {
+            background-color: rgba(29, 155, 240, 0.4) !important;
+          }
+          button[data-testid="tweetButton"][disabled] div {
+            color: rgb(255, 255, 255) !important;
+          }
+        `
+      }
     }
   },
   
@@ -180,9 +280,12 @@ const TWITTER_MODS = {
       styles: `
         margin: 0 auto !important;
         float: none !important;
+        width: 100% !important;
         max-width: 600px !important;
-        width: 600px !important;
-        flex: 0 1 600px !important;
+        flex-grow: 1 !important;
+        flex-basis: auto !important;
+        flex-direction: column !important;
+        flex-shrink: 0 !important;
         -webkit-box-flex: 0 !important;
       `
     },
