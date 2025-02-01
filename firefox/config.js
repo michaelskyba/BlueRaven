@@ -70,6 +70,23 @@ const TWITTER_MODS = {
         'a[aria-label="Premium"][role="link"]'
       ]
     },
+    jobs: {
+      enabled: false,
+      description: "Hide Jobs Button",
+      selectors: [
+        'a[data-testid="jobs-tab-item"]',
+        'a[aria-label="Jobs"][role="link"]',
+        'a[href$="/jobs"]'
+      ]
+    },
+    articles: {
+      enabled: false,
+      description: "Hide Articles Button",
+      selectors: [
+        'a[href$="/compose/articles"]',
+        'a[aria-label="Articles"][role="link"]'
+      ]
+    },
     explore: {
       enabled: false,
       description: "Hide Explore Tab",
