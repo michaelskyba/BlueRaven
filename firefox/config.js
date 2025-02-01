@@ -13,6 +13,20 @@ const TWITTER_MODS = {
 
   // UI Elements to Hide
   hideElements: {
+    grok: {
+      enabled: false,
+      description: "Remove All Grok",
+      selectors: [
+        'div[data-testid="GrokDrawer"]',
+        'div[data-testid="GrokDrawerHeader"]',
+        'div[style*="position: absolute"][style*="bottom: 0"]:has(div[data-testid="GrokDrawer"])',
+        'a[aria-label="Grok"][role="link"]',
+        'button[data-testid="grokImgGen"]',
+        'div[role="presentation"]:has(button[data-testid="grokImgGen"])',
+        'button[aria-label="Grok actions"][role="button"]',
+        'button[aria-label="Profile Summary"][role="button"]'
+      ]
+    },
     sidebar: {
       enabled: false,
       description: "Hide Entire Sidebar",
@@ -27,19 +41,6 @@ const TWITTER_MODS = {
       selectors: [
         'div[aria-label="Timeline: Trending now"]',
         'div[aria-label="Trending"]'
-      ]
-    },
-    grok: {
-      enabled: false,
-      description: "Hide Grok Button & Drawer",
-      selectors: [
-        'div[data-testid="GrokDrawer"]',
-        'div[data-testid="GrokDrawerHeader"]',
-        'div[style*="position: absolute"][style*="bottom: 0"]:has(div[data-testid="GrokDrawer"])',
-        'a[aria-label="Grok"][role="link"]',
-        'button[data-testid="grokImgGen"]',
-        'div[role="presentation"]:has(button[data-testid="grokImgGen"])',
-        'button[aria-label="Grok actions"][role="button"]'
       ]
     },
     brokenSpacer: {
