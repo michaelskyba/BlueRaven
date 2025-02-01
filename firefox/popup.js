@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const settingsDiv = document.getElementById('settings');
 
   try {
-    const { settings } = await browserAPI.storage.local.get('settings');
+    const { settings } = await browserAPI.storage.sync.get('settings');
     console.log('Retrieved settings:', settings);
 
     // Section order and titles
@@ -36,6 +36,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Add toggles for each sub-setting
         Object.entries(TWITTER_MODS[id]).forEach(([key, config]) => {
+          // For replaceElements, skip any entry that has a parent property.
+          if (id === 'replaceElements' && config.parent) {
+            return;
+          }
           if (typeof config === 'object' && 'enabled' in config) {
             const item = createToggle(
               `${id}-${key}`,
@@ -80,16 +84,28 @@ function createToggle(id, label, checked, onChange) {
 async function updateSetting(modType, key, value) {
   try {
     console.log(`Updating setting: ${modType}.${key} = ${value}`);
-    const { settings = {} } = await browserAPI.storage.local.get('settings');
+    const { settings = {} } = await browserAPI.storage.sync.get('settings');
 
     if (!settings[modType]) settings[modType] = {};
     if (!settings[modType][key]) settings[modType][key] = {};
     settings[modType][key].enabled = value;
 
-    console.log('New settings:', settings);
-    await browserAPI.storage.local.set({ settings });
+    // If this is a parent in replaceElements, update any children as well.
+    if (modType === 'replaceElements') {
+      const children = Object.entries(TWITTER_MODS.replaceElements)
+        .filter(([childKey, childConfig]) => childConfig.parent === key)
+        .map(([childKey]) => childKey);
 
-    // Notify content script to refresh
+      children.forEach(childKey => {
+        if (!settings[modType][childKey]) settings[modType][childKey] = {};
+        settings[modType][childKey].enabled = value;
+      });
+    }
+
+    console.log('New settings:', settings);
+    await browserAPI.storage.sync.set({ settings });
+
+    // Notify content scripts to refresh
     const tabs = await browserAPI.tabs.query({ url: ['*://twitter.com/*', '*://x.com/*'] });
     console.log('Found tabs to update:', tabs);
 
@@ -101,6 +117,26 @@ async function updateSetting(modType, key, value) {
         value
       }).catch(err => console.error(`Failed to update tab ${tab.id}:`, err))
     );
+
+    // If modType is replaceElements, also send messages for its children.
+    if (modType === 'replaceElements') {
+      const children = Object.entries(TWITTER_MODS.replaceElements)
+        .filter(([childKey, childConfig]) => childConfig.parent === key)
+        .map(([childKey]) => childKey);
+
+      children.forEach(childKey => {
+        tabs.forEach(tab => {
+          updatePromises.push(
+            browserAPI.tabs.sendMessage(tab.id, {
+              type: 'refreshTheme',
+              modType,
+              key: childKey,
+              value
+            }).catch(err => console.error(`Failed to update tab ${tab.id}:`, err))
+          );
+        });
+      });
+    }
 
     await Promise.all(updatePromises);
 
