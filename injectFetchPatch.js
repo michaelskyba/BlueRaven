@@ -41,19 +41,23 @@
 		console.log("updating")
 
 		const messagesLink = document.querySelector('a[href$="/messages"]');
-		if (!messagesLink)
+		if (!messagesLink) {
+			console.log("not found messagesLink")
 			return;
+		}
 
 		const unreadContainer = messagesLink.querySelector("div.css-175oi2r div.css-175oi2r");
 		const topSvg = messagesLink.querySelector("svg");
 		const originalBadge = unreadContainer.querySelector('div[aria-label~="unread"]');
 
+		originalBadge && console.log("removing originalBadge")
 		originalBadge && originalBadge.remove();
 
 		let directBadge = unreadContainer.querySelector("div.blueRavenDM");
 		let groupBadge = unreadContainer.querySelector("div.blueRavenGC");
 
 		if (!directBadge && directCount > 0) {
+			console.log("creating directBadge")
 			directBadge = document.createElement("div");
 			directBadge.className = "css-146c3p1 r-1ttztb7 r-qvutc0 r-37j5jr r-1gkfh8e r-56xrmm r-16dba41 r-1awozwy r-l5o3uw r-sdzlij r-6koalj r-1q142lx r-10ptun7 r-1777fci r-285fr0 r-lrvibr r-3s2u2q r-1xc7w19 r-1phboty r-rs99b7 r-1tjplnt r-2utimh r-u8s1d r-1m4drjs";
 			directBadge.className += " blueRavenDM"
@@ -65,16 +69,21 @@
 
 			topSvg.after(directBadge)
 		}
-		if (directBadge && directCount == 0)
+		if (directBadge && directCount == 0) {
+			console.log("removing directBadge")
 			directBadge.remove()
+		}
 
 		if (directBadge) {
 			const span = directBadge.children[0];
-			if (span.innerHTML != directCount.toString())
+			if (span.innerHTML != directCount.toString()) {
 				span.innerHTML = directCount.toString();
+				console.log("updating directBadge")
+			}
 		}
 
 		if (!groupBadge && groupCount > 0) {
+			console.log("creating groupbadge")
 			groupBadge = document.createElement("div");
 			groupBadge.className = "css-146c3p1 r-1ttztb7 r-qvutc0 r-37j5jr r-1gkfh8e r-56xrmm r-16dba41 r-1awozwy r-l5o3uw r-sdzlij r-6koalj r-1q142lx r-10ptun7 r-1777fci r-285fr0 r-lrvibr r-3s2u2q r-1xc7w19 r-1phboty r-rs99b7 r-1tjplnt r-2utimh r-u8s1d r-1m4drjs";
 			groupBadge.className += " blueRavenGC"
@@ -91,13 +100,17 @@
 			const last = directBadge || topSvg;
 			last.after(groupBadge);
 		}
-		if (groupBadge && groupCount == 0)
+		if (groupBadge && groupCount == 0) {
 			groupBadge.remove()
+			console.log("removing groupBadge")
+		}
 
 		if (groupBadge) {
 			const span = groupBadge.children[0];
-			if (span.innerHTML != groupCount.toString())
+			if (span.innerHTML != groupCount.toString()) {
 				span.innerHTML = groupCount.toString();
+				console.log("changing groupBadge")
+			}
 		}
 	}
 
@@ -123,6 +136,8 @@
 	}
 
 	function inboxRequest() {
+		console.log("scheduled start")
+
 		const requestURL =
 			"https://x.com/i/api/1.1/dm/inbox_initial_state.json?nsfw_filtering_enabled=false&filter_low_quality=false&include_quality=all&include_profile_interstitial_type=1&include_blocking=1&include_blocked_by=1&include_followed_by=1&include_want_retweets=1&include_mute_edge=1&include_can_dm=1&include_can_media_tag=1&include_ext_is_blue_verified=1&include_ext_verified_type=1&include_ext_profile_image_shape=1&skip_status=1&dm_secret_conversations_enabled=false&krs_registration_enabled=true&cards_platform=Web-12&include_cards=1&include_ext_alt_text=true&include_ext_limited_action_results=true&include_quote_count=true&include_reply_count=1&tweet_mode=extended&include_ext_views=true&dm_users=true&include_groups=true&include_inbox_timelines=true&include_ext_media_color=true&supports_reactions=true&supports_edit=true&include_ext_edit_control=true&include_ext_business_affiliations_label=true&include_ext_parody_commentary_fan_label=true&ext=mediaColor%2CaltText%2CmediaStats%2ChighlightedLabel%2CparodyCommentaryFanLabel%2CvoiceInfo%2CbirdwatchPivot%2CsuperFollowMetadata%2CunmentionInfo%2CeditControl%2Carticle";
 
